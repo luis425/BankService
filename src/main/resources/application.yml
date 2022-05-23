@@ -1,0 +1,18 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb+srv://Luis:Rf1a76Py1s5dt7Dl@projectweek01.mxgyr.mongodb.net/BootCampWeek01?retryWrites=true&w=majority
+  application:
+    name: bankservice
+server:
+  servlet:
+    context-path: /bank
+  port: 8080
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/ 
+  instance:
+    prefer-ip-address: true
+    hostname: ${COMPUTERNAME:localhost}  
+ 
