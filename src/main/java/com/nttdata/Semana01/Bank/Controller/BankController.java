@@ -22,6 +22,7 @@ import com.nttdata.Semana01.Bank.DTO.TypeBankAccounts;
 import com.nttdata.Semana01.Bank.DTO.TypeCredits;
 import com.nttdata.Semana01.Bank.Entity.Bank;
 import com.nttdata.Semana01.Bank.Service.BankService;
+import com.nttdata.Semana01.Bank.response.BankResponse;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -211,6 +212,36 @@ public class BankController {
 			return Mono.error(new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage()));
 		}
 
+	}
+	
+	@GetMapping(value = "/bankbycodeResponse/{code}")
+	public Mono<ResponseEntity<BankResponse>> getbankbycodeResponse(@PathVariable String code) {
+
+		try {
+
+			Flux<BankResponse> customerflux = this.bankSerivce.getbankbycodeResponse(code);
+
+			List<BankResponse> list1 = new ArrayList<>();
+
+			customerflux.collectList().subscribe(list1::addAll);
+
+			long temporizador = (3 * 1000);
+
+			Thread.sleep(temporizador);
+
+			if (list1.isEmpty()) {
+				return null;
+
+			} else {
+				return Mono.just(ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(list1.get(0)))
+						.defaultIfEmpty(ResponseEntity.notFound().build());
+			}
+
+		} catch (InterruptedException e) {
+			log.info(e.toString());
+			Thread.currentThread().interrupt();
+			return Mono.error(new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage()));
+		}
 	}
 
 	@DeleteMapping("/{id}")

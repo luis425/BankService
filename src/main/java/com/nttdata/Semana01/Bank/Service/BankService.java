@@ -9,6 +9,7 @@ import com.nttdata.Semana01.Bank.DTO.TypeBankAccounts;
 import com.nttdata.Semana01.Bank.DTO.TypeCredits;
 import com.nttdata.Semana01.Bank.Entity.Bank;
 import com.nttdata.Semana01.Bank.Repository.BankRepository;
+import com.nttdata.Semana01.Bank.response.BankResponse;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -71,4 +72,15 @@ public class BankService {
 		return typeCreditsServiceClientResponse;
 
 	}
+	
+	public Flux<BankResponse> getbankbycodeResponse(String code) {
+		return bankRepository.findAll().filter(x -> x.getCode().equals(code))
+				.map(bank -> BankResponse.builder()
+						.id(bank.getId())
+						.code(bank.getCode())
+						.bankName(bank.getBankName())
+						.directionMain(bank.getDirectionMain()) 
+						.build());
+	}
+	
 }
